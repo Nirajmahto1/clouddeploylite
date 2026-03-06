@@ -23,7 +23,7 @@ api.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-api.interceptors.response.clear.use(
+api.interceptors.response.use(
     (response)=>response,
     (error)=>{
         if(error.response?.status === 401){
