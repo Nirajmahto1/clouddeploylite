@@ -22,6 +22,9 @@ app.use(express.urlencoded({extended:true}));
 const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
+// Deployment routes
+const appsRoutes = require('./routes/apps');
+app.use('/api/apps', appsRoutes);
 
 // Request Logger
 app.use((req,res,next)=>{

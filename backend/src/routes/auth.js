@@ -56,7 +56,8 @@ router.get('/github/callback',async(req,res)=>{
     );
 
     if(user){
-        //Update existing User
+        //Update existing User    
+        
         console.log('Updating existing User');
         user = await db.queryOne(
             `UPDATE users
