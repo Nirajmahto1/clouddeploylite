@@ -1,0 +1,28 @@
+# API and Dashboard
+api:
+  dashboard: true
+  insecure: true
+
+# EntryPoints
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+# Providers
+providers:
+  docker:
+    endpoint: "tcp://host.docker.internal:2375"  # TCP endpoint
+    exposedByDefault: false
+    network: web
+    watch: true
+
+# Logging
+log:
+  level: DEBUG
+  format: common
+
+# Access logs
+accessLog:
+  format: common

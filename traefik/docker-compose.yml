@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:latest
+    container_name: clouddeploylite-traefik
+    restart: unless-stopped
+    
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.endpoint=tcp://host.docker.internal:2375"  # TCP on Windows
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.docker.network=web"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--log.level=DEBUG"
+      - "--accesslog=true"
+    
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8081:8080"
+    
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # Important for Windows
+    
+    networks:
+      - web
+    
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+
+networks:
+  web:
+    name: web
+    driver: bridge
