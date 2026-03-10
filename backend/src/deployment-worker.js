@@ -51,23 +51,27 @@ async function processDeployment(deployId, appId, repoUrl, userId) {
     
     // Create and start container
     const containerName = `app-${appId}`;
-    const containerResult = await createAndStartContainer(imageName, containerName, {
-      containerPort: runtime.runtime === 'nodejs' ? 3000 : 8000,
-      memory: 256 * 1024 * 1024,  // 256MB
-      labels: {
-        'clouddeploylite.managed': 'true',
-        'clouddeploylite.app-id': toString(appId),
-        'clouddeploylite.deploy-id': deployId
-      }
-    });
+    // Get app details for subdomain
+const app = await db.queryOne('SELECT subdomain FROM apps WHERE id = $1', [appId]);
+
+   const containerResult = await createAndStartContainer(imageName, containerName, {
+  subdomain: app.subdomain,
+  domain: process.env.APP_DOMAIN || 'localhost',  // localhost for dev
+  containerPort: runtime.runtime === 'nodejs' ? 3000 : 8000,
+  memory: 256 * 1024 * 1024,  // 256MB
+  labels: {
+    'clouddeploylite.app-id': containerName,
+    'clouddeploylite.deploy-id': deployId
+  }
+});
     
     // Update app with container info
-    await db.query(
-      `UPDATE apps 
-       SET container_id = $1, port = $2, status = $3
-       WHERE id = $4`,
-      [containerResult.containerId, containerResult.port, 'running', appId]
-    );
+ await db.query(
+  `UPDATE apps 
+   SET container_id = $1, status = $2, url = $3
+   WHERE id = $4`,
+  [containerResult.containerId, 'running', containerResult.url, appId]
+);
     
     // Update deployment status: success
     await updateStatus(deployId, appId, 'success');

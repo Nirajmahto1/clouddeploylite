@@ -153,53 +153,98 @@ async function buildImage(buildPath, imageName, onProgress) {
     });
 }
 //Create and start container
-async function createAndStartContainer(imageName,containerName,options={}){
-    console.log(`🚀 Creating container: ${containerName}`);
-    const containerConfig ={
-        Image:imageName,
-        name:containerName,
-        ExposedPorts:{
-            [`${options.containerPort||3000}/tcp`]:{}
-        },
-        HostConfig:{
-            PortBindings:{
-                [`${options.containerPort || 3000}/tcp`]: [{ HostPort: '0' }]  // Auto-assign host port
-            },
-            Memory:options.memory || 128*1024*1024,
-            RestartPolicy:{
-                Name:'unless-stopped'
-            }
-        },
-        Env:options.env||[],
-        Labels:options.labels||{}
-    };
-    try {
-        const container = await docker.createContainer(containerConfig);
-        console.log(`   Container created: ${container.id.substring(0, 12)}`);
+async function createAndStartContainer(imageName, containerName, options = {}) {
+  console.log(`🚀 Creating container: ${containerName}`);
+  
+  const subdomain = options.subdomain || containerName;
+  const domain = options.domain || 'localhost';
+  const containerPort = options.containerPort || 3000;
+  
+  // Fix labels - ensure all values are strings
+  const customLabels = {};
+  if (options.labels) {
+    Object.keys(options.labels).forEach(key => {
+      customLabels[key] = String(options.labels[key]);
+    });
+  }
+  
+  const labels = {
+    'traefik.enable': 'true',
     
-        //Start Container
-        await container.start();
-        console.log('   Container started');
-
-        //Get container details (including assigned port)
-        const containerInfo = await container.inspect();
-        const portBindings = containerInfo.NetworkSettings.Ports;
-
-        console.log('');
-        console.log(portBindings);
-        console.log('');
-        const assignedPort = portBindings[`${options.containerPort || 3000}/tcp`]?.[0]?.HostPort;
-        console.log(`✅ Container running on port: ${assignedPort}`);
-      return {
+    // HTTP Router
+    [`traefik.http.routers.${containerName}.rule`]: `Host(\`${subdomain}.${domain}\`)`,
+    [`traefik.http.routers.${containerName}.entrypoints`]: 'web',
+    
+    // Service - Tell Traefik which internal port to use
+    [`traefik.http.services.${containerName}.loadbalancer.server.port`]: String(containerPort),
+    
+    // Custom labels
+    'clouddeploylite.managed': 'true',
+    ...customLabels
+  };
+  
+  console.log('📋 Container labels:', JSON.stringify(labels, null, 2));
+  
+  // Container config for Traefik routing
+  const containerConfig = {
+    Image: imageName,
+    name: containerName,
+    
+    // Expose the port (internal Docker network only)
+    ExposedPorts: {
+      [`${containerPort}/tcp`]: {}
+    },
+    
+    HostConfig: {
+      // Memory limit
+      Memory: options.memory || 256 * 1024 * 1024,
+      
+      // Restart policy
+      RestartPolicy: {
+        Name: 'unless-stopped'
+      },
+      
+      // Connect to web network (same as Traefik)
+      NetworkMode: 'web'
+      
+      // NO PortBindings! Traefik handles routing
+    },
+    
+    Env: options.env || [],
+    Labels: labels
+  };
+  
+  try {
+    const container = await docker.createContainer(containerConfig);
+    console.log(`   Container created: ${container.id.substring(0, 12)}`);
+    
+    // Start container
+    await container.start();
+    console.log('   Container started');
+    
+    // Get container info
+    const containerInfo = await container.inspect();
+    
+    // Build URL (accessed via Traefik, not direct port)
+    const protocol = options.enableHttps && domain !== 'localhost' ? 'https' : 'http';
+    const url = `${protocol}://${subdomain}.${domain}`;
+    
+    console.log(`✅ Container running`);
+    console.log(`   Internal port: ${containerPort}`);
+    console.log(`   Access URL (via Traefik): ${url}`);
+    console.log(`   Container network: web`);
+    
+    return {
       containerId: container.id,
-      port: assignedPort,
+      subdomain: `${subdomain}.${domain}`,
+      url,
       containerInfo
     };
     
-    } catch (error) {
-        console.error('Error creating container:', error.message);
+  } catch (error) {
+    console.error('Error creating container:', error.message);
     throw error;
-    }
+  }
 }
 
 
