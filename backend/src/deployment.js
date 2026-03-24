@@ -19,6 +19,7 @@ async function ensureBuildDir() {
 }
 // Detect runtime
 async function cloneRepoo(repoUrl) {
+    const deployId = uuidv4();
     const buildPath = path.join(BUILD_DIR, deployId);
 
     console.log(`📥 Cloning repository: ${repoUrl}`);
