@@ -77,7 +77,7 @@ const runtime = await detectRuntime(buildPath)
 console.log(runtime)
 await cleanupBuilds(buildPath);
   } catch (error) {
-    // console.error('Error fetching app:', error);
+     console.error('Error fetching app:', error);
     res.status(500).json({ error: 'Something Went wrong' });
   }
 
