@@ -64,10 +64,12 @@ router.post('/detect-runtime',requireAuth,async(req,res)=>{
   }
   try {
     const {
+  ensureBuildDir,
   cloneRepoo,
   detectRuntime,
   cleanupBuilds
 } = require('../deployment');
+    await ensureBuildDir();
 console.log(repoUrl)
 const buildPath = await cloneRepoo(repoUrl)
 console.log(buildPath)
