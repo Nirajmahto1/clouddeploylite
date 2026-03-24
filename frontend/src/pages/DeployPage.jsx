@@ -167,7 +167,7 @@ export default function DeployPage({ onBack, onDeployed }) {
     setError("");
     try {
       // Call backend to detect runtime (backend can check package.json / requirements.txt etc.)
-      const res = await api.post("/api/detect-runtime", { repoUrl });
+      const res = await api.post("/api/apps/detect-runtime", { repoUrl });
       setDetected(res.data.runtime); // e.g. "Node.js 18.x" or "Python 3.11"
       setStep(1);
     } catch (e) {
