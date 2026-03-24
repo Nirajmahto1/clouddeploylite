@@ -188,14 +188,20 @@ export default function DashboardPage({ user, onLogout, onSelectApp, onNavigate 
       setLoading(true);
       setError("");
       const res = await api.get("/api/apps");
-      setApps(res.data);
+      setApps(
+  Array.isArray(res.data.apps)
+    ? res.data.apps                // multiple apps
+    : res.data.app
+    ? [res.data.app]              // single app
+    : []                          // fallback
+);
     } catch (e) {
       setError(e.response?.data?.message || "Failed to load apps.");
     } finally {
       setLoading(false);
     }
   };
-
+console.log(apps);
   const navigate = (id) => {
     setActive(id);
     onNavigate && onNavigate(id);
@@ -286,7 +292,7 @@ export default function DashboardPage({ user, onLogout, onSelectApp, onNavigate 
               <div className="stat">
                 <div className="stat-lbl">Total Apps</div>
                 <div className="stat-val">{loading ? <span className="skeleton" style={{display:"inline-block",width:40,height:32}}/> : apps.length}</div>
-                <div className="stat-delta delta-up">↑ Live</div>
+                
               </div>
               <div className="stat">
                 <div className="stat-lbl">Running Instances</div>

@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 5000;
 //MiddleWares
 // process.env.FRONTEND_URL
 app.use(cors({
-    origin:true,
+    origin:process.env.FRONTEND_URL,
     credentials:true
 }));
 app.use(express.json());

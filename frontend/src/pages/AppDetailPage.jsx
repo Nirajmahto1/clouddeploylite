@@ -228,7 +228,7 @@ export default function AppDetailPage({ app, onBack }) {
 
   const fetchLogs = async () => {
     try {
-      const res = await api.get(`/api/apps/${app.id}/deployments`);
+      const res = await api.get(`/api/apps/${app.id}`);
       // Get logs from the latest deployment
       if (res.data.length > 0) {
         const latest = res.data[0];
@@ -242,8 +242,8 @@ export default function AppDetailPage({ app, onBack }) {
 
   const fetchDeployments = async () => {
     try {
-      const res = await api.get(`/api/apps/${app.id}/deployments`);
-      setDeploys(res.data);
+      const res = await api.get(`/api/apps/${app.id}`);
+      setDeploys(res.data.deployments);
     } catch (_) {}
   };
 
@@ -416,8 +416,8 @@ export default function AppDetailPage({ app, onBack }) {
                     <div style={{padding:20,textAlign:"center",color:"var(--muted)",fontSize:13}}>No deployments yet.</div>
                   ) : deploys.slice(0,3).map((d, idx) => (
                     <div className="dep-row" key={d.id}>
-                      <div className={`dep-ico ${idx===0?"di-green":"di-gray"}`}>
-                        <Icon d={idx===0 ? I.check : I.refresh} size={13}/>
+                      <div className={`dep-ico ${d.status==="failed"?"di-gray":"di-green"}`}>
+                        <Icon d={d.status==="failed" ? I.refresh : I.check} size={13}/>
                       </div>
                       <div>
                         <div className="dep-name">Production</div>
@@ -425,10 +425,10 @@ export default function AppDetailPage({ app, onBack }) {
                           {d.status} • {new Date(d.created_at).toLocaleString()}
                         </div>
                       </div>
-                      {idx === 0
-                        ? <span className="active-tag">ACTIVE</span>
-                        : <div className="rollback">Rollback</div>
-                      }
+                       {d.status==="failed"
+                    ? <span className="rollback">FAILED</span>
+                    : <div className="active-tag">ACTIVE</div>
+                  }
                     </div>
                   ))}
                 </div>
@@ -519,8 +519,8 @@ export default function AppDetailPage({ app, onBack }) {
                 </div>
               ) : deploys.map((d, idx) => (
                 <div className="dep-row" key={d.id}>
-                  <div className={`dep-ico ${idx===0?"di-green":"di-gray"}`}>
-                    <Icon d={idx===0?I.check:I.refresh} size={13}/>
+                  <div className={`dep-ico ${d.status==="failed"?"di-gray":"di-green"}`}>
+                    <Icon d={d.status==="failed"?I.refresh:I.check} size={13}/>
                   </div>
                   <div>
                     <div className="dep-name">
@@ -530,9 +530,9 @@ export default function AppDetailPage({ app, onBack }) {
                       id: {d.id} • {new Date(d.created_at).toLocaleString()}
                     </div>
                   </div>
-                  {idx === 0
-                    ? <span className="active-tag">ACTIVE</span>
-                    : <div className="rollback">Rollback</div>
+                  {d.status==="failed"
+                    ? <span className="rollback">FAILED</span>
+                    : <div className="active-tag">ACTIVE</div>
                   }
                 </div>
               ))}
