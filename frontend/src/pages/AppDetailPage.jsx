@@ -189,7 +189,7 @@ export default function AppDetailPage({ app, onBack }) {
   useEffect(() => {
     if (!app?.id) return;
 
-    socketRef.current = io("http://psnlprojects.fun", {
+    socketRef.current = io("https://psnlprojects.fun", {
       auth: { token: localStorage.getItem("token") },
     });
 
