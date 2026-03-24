@@ -17,6 +17,28 @@ async function ensureBuildDir() {
 
     }
 }
+// Detect runtime
+async function cloneRepoo(repoUrl) {
+    const buildPath = path.join(BUILD_DIR, deployId);
+
+    console.log(`📥 Cloning repository: ${repoUrl}`);
+    console.log(`   Build path: ${buildPath}`);
+
+    return new Promise((resolve, reject) => {
+        // console.log(`git clone ${repoUrl} ${buildPath}git clone ${repoUrl} ${buildPath}`);
+        exec(`git clone ${repoUrl} ${buildPath}`, (error, stdout, stderr) => {
+            if (error) {
+                console.error('Git clone error:', error.message);
+                console.error('stderr:', stderr);
+                reject(new Error(`Failed to clone repository: ${error.message}`));
+                return;
+            }
+            console.log('✅ Repository cloned successfully');
+            resolve(buildPath);
+        });
+    });
+
+}
 
 //Clone Github repository
 async function cloneRepo(repoUrl, deployId) {
@@ -151,7 +173,16 @@ async function cleanupBuild(deployId) {
         console.error('Error cleaning up build:', error);
     }
 }
-
+//Clean up build directory
+async function cleanupBuilds(buildPath) {
+    
+    try {
+        await fs.rm(buildPath, { recursive: true, force: true });
+        console.log(`🗑️  Cleaned up build directory: ${buildPath}`);
+    } catch (error) {
+        console.error('Error cleaning up build:', error);
+    }
+}
 //Intialize deployment
 async function initializeDeployment(appId,repoUrl,userId){
     const deployId = uuidv4();
@@ -184,9 +215,11 @@ async function updateDeploymentStatus(deployId,status,logs=null){
 module.exports = {
   ensureBuildDir,
   cloneRepo,
+  cloneRepoo,
   detectRuntime,
   generateDockerfile,
   cleanupBuild,
+  cleanupBuilds,
   initializeDeployment,
   updateDeploymentStatus,
   BUILD_DIR

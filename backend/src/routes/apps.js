@@ -49,7 +49,34 @@ router.get('/:id', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch app' });
   }
 });
+// Detect Runtime
+router.post('/detect-runtime',requireAuth,async(req,res)=>{
+  const {repoUrl} = req.body;
+  if (!repoUrl) {
+    return res.status(400).json({ 
+      error: 'Repository URL are required' 
+    });
+  }
+    if (!repoUrl.startsWith('https://github.com/')) {
+    return res.status(400).json({ 
+      error: 'Only GitHub repositories are supported' 
+    });
+  }
+  try {
+    const {
+  cloneRepoo,
+  detectRuntime,
+  cleanupBuilds
+} = require('../deployment');
+const buildPath = await cloneRepoo(repoUrl)
+const runtime = await detectRuntime(buildPath);
+await cleanupBuilds(buildPath);
+  } catch (error) {
+    // console.error('Error fetching app:', error);
+    res.status(500).json({ error: 'Something Went wrong' });
+  }
 
+})
 // Create new app and trigger deployment
 router.post('/', requireAuth, async (req, res) => {
   const { name, repoUrl } = req.body;
