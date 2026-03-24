@@ -68,8 +68,11 @@ router.post('/detect-runtime',requireAuth,async(req,res)=>{
   detectRuntime,
   cleanupBuilds
 } = require('../deployment');
+console.log(repoUrl)
 const buildPath = await cloneRepoo(repoUrl)
-const runtime = await detectRuntime(buildPath);
+console.log(buildPath)
+const runtime = await detectRuntime(buildPath)
+console.log(runtime)
 await cleanupBuilds(buildPath);
   } catch (error) {
     // console.error('Error fetching app:', error);
