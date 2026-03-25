@@ -173,7 +173,9 @@ async function createAndStartContainer(imageName, containerName, options = {}) {
     
     // HTTP Router
     [`traefik.http.routers.${containerName}.rule`]: `Host(\`${subdomain}.${domain}\`)`,
-    [`traefik.http.routers.${containerName}.entrypoints`]: 'web',
+    [`traefik.http.routers.${containerName}.entrypoints`]: 'websecure',
+    [`traefik.http.routers.${containerName}.tls`]:'true',
+    [`traefik.http.routers.${containerName}.tls.certresolver`]:'letsencrypt',
     
     // Service - Tell Traefik which internal port to use
     [`traefik.http.services.${containerName}.loadbalancer.server.port`]: String(containerPort),

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   traefik:
-    image: traefik:v2.10
+    image: traefik:latest
     container_name: clouddeploylite-traefik
     restart: unless-stopped
     
@@ -53,12 +53,6 @@ services:
       - "traefik.http.routers.dashboard.entrypoints=websecure"
       - "traefik.http.routers.dashboard.tls=true"
       - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
-      
-      # Basic Auth for Dashboard
-      - "traefik.http.routers.dashboard.middlewares=dashboard-auth"
-      - "traefik.http.middlewares.dashboard-auth.basicauth.users=admin:$$apr1$$8evjxm8r$$YuwCFcUZIVBvUZZjBMKXB."
-      # Username: admin, Password: password (CHANGE THIS!)
-      # Generate new hash: htpasswd -nb admin yourpassword
 
 networks:
   web:
