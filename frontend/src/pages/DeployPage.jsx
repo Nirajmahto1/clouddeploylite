@@ -214,7 +214,7 @@ export default function DeployPage({ onBack, onDeployed }) {
             clearInterval(pollInterval);
             setTimeout(() => { setDeploying(false); setSuccess(true); }, 500);
           }
-          console.log(createdApp)
+         
           if (status.data.app.status === "failed") {
             clearInterval(pollInterval);
             setDeploying(false);
@@ -255,10 +255,10 @@ export default function DeployPage({ onBack, onDeployed }) {
               <div className="success-sub">
                 Deployed at&nbsp;
 
-                <a href={`https://${createdApp?.subdomain}.psnlprojects.fun`}
+                <a href={`https://${createdApp?.app?.subdomain}.psnlprojects.fun`}
                   target="_blank" rel="noreferrer"
                   style={{color:"var(--accent2)",fontFamily:"var(--mono)",fontSize:12}}>
-                  {createdApp?.subdomain}.psnlprojects.fun
+                  {createdApp?.app?.subdomain}.psnlprojects.fun
                 </a>
               </div>
               <div className="success-acts">
