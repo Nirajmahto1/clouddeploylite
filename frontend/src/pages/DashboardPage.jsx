@@ -349,7 +349,7 @@ console.log(apps);
                             <td>
                               <div className="sub-link">
                                 <Icon d={I.link} size={11}/>
-                                {app.subdomain}.clouddeploylite.io
+                                {app.subdomain}.psnlprojects.fun
                                 <Icon d={I.external} size={11}/>
                               </div>
                             </td>
@@ -401,7 +401,7 @@ console.log(apps);
                        app.status==="failed"  ? `${app.name} build failed` :
                        `${app.name} deployed`}
                     </div>
-                    <div className="act-sub">{app.subdomain}.clouddeploylite.io</div>
+                    <div className="act-sub">{app.subdomain}.psnlprojects.fun</div>
                     <div className="act-time">{app.created_at ? new Date(app.created_at).toLocaleDateString() : ""}</div>
                   </div>
                 </div>

@@ -252,10 +252,10 @@ export default function DeployPage({ onBack, onDeployed }) {
               <div className="success-title">Your app is live! 🚀</div>
               <div className="success-sub">
                 Deployed at&nbsp;
-                <a href={`https://${createdApp?.subdomain}.clouddeploylite.io`}
+                <a href={`https://${createdApp?.subdomain}.psnlprojects.fun`}
                   target="_blank" rel="noreferrer"
                   style={{color:"var(--accent2)",fontFamily:"var(--mono)",fontSize:12}}>
-                  {createdApp?.subdomain}.clouddeploylite.io
+                  {createdApp?.subdomain}.psnlprojects.fun
                 </a>
               </div>
               <div className="success-acts">
@@ -267,7 +267,7 @@ export default function DeployPage({ onBack, onDeployed }) {
                   <Icon d={I.activity} size={13}/>View Logs
                 </button>
                 <button className="btn btn-ghost"
-                  onClick={() => window.open(`https://${createdApp?.subdomain}.clouddeploylite.io`)}>
+                  onClick={() => window.open(`https://${createdApp?.subdomain}.psnlprojects.fun`)}>
                   <Icon d={I.zap} size={13}/>Visit App
                 </button>
               </div>
@@ -370,12 +370,12 @@ export default function DeployPage({ onBack, onDeployed }) {
                   onChange={e => setSubdomain(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g,""))}
                   disabled={deploying}
                 />
-                <div className="subdomain-suffix">.clouddeploylite.io</div>
+                <div className="subdomain-suffix">.psnlprojects.fun</div>
               </div>
               {subdomain && (
                 <div style={{marginTop:6,fontSize:11,color:"var(--green)",display:"flex",alignItems:"center",gap:4}}>
                   <Icon d={I.check} size={11}/>
-                  {subdomain}.clouddeploylite.io
+                  {subdomain}.psnlprojects.fun
                 </div>
               )}
             </div>

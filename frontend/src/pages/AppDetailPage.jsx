@@ -348,7 +348,7 @@ export default function AppDetailPage({ app, onBack }) {
             </div>
             <div className="hdr-acts">
               <button className="btn btn-ghost"
-                onClick={() => window.open(`https://${app?.subdomain}.clouddeploylite.io`)}>
+                onClick={() => window.open(`https://${app?.subdomain}.psnlprojects.fun`)}>
                 <Icon d={I.external} size={14}/>Visit Site
               </button>
               <button className="btn btn-primary" onClick={redeploy} disabled={redeploying}>

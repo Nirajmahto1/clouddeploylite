@@ -174,7 +174,7 @@ export default function LandingPage({ onLogin }) {
           <div className="hero-visual">
             <div className="v-dots">
               {["#f87171","#fbbf24","#4ade80"].map((c,i)=><div key={i} className="v-dot" style={{background:c}}/>)}
-              <div className="v-url">clouddeploylite.io/dashboard/new</div>
+              <div className="v-url">psnlprojects.fun/dashboard/new</div>
             </div>
             <input className="v-input" placeholder="https://github.com/username/project" value={repo} onChange={e=>setRepo(e.target.value)}/>
             <button className="v-analyze" onClick={onLogin}>Analyze Repository</button>
