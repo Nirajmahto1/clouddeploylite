@@ -196,7 +196,7 @@ export default function DeployPage({ onBack, onDeployed }) {
     try {
       const res = await api.post("/api/apps", {
         name:      appName || subdomain || repoUrl.split("/").pop(),
-        repo_url:  repoUrl,
+        repoUrl:  repoUrl,
         subdomain: subdomain || repoUrl.split("/").pop().toLowerCase().replace(/[^a-z0-9]/g,"-"),
         env,
       });
@@ -207,7 +207,7 @@ export default function DeployPage({ onBack, onDeployed }) {
       // Poll status until running or failed
       const pollInterval = setInterval(async () => {
         try {
-          const status = await api.get(`/api/apps/${res.data.id}`);
+          const status = await api.get(`/api/apps/${res.data.app.id}`);
           if (status.data.status === "running") {
             setStep(4);
             clearInterval(pollInterval);
