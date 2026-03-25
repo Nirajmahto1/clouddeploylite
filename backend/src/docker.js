@@ -228,7 +228,7 @@ async function createAndStartContainer(imageName, containerName, options = {}) {
     const containerInfo = await container.inspect();
     
     // Build URL (accessed via Traefik, not direct port)
-    const protocol = options.enableHttps && domain !== 'localhost' ? 'https' : 'http';
+    const protocol = options.enableHttps && domain !== 'localhost' ? 'https' : 'https';
     const url = `${protocol}://${subdomain}.${domain}`;
     
     console.log(`✅ Container running`);

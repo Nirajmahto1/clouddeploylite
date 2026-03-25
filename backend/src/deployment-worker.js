@@ -55,7 +55,8 @@ async function processDeployment(deployId, appId, repoUrl, userId) {
 const app = await db.queryOne('SELECT subdomain FROM apps WHERE id = $1', [appId]);
 
    const containerResult = await createAndStartContainer(imageName, containerName, {
-  subdomain: app.subdomain,
+  enableHttps:true,
+    subdomain: app.subdomain,
   domain: process.env.APP_DOMAIN || 'localhost',  // localhost for dev
   containerPort: runtime.runtime === 'nodejs' ? 3000 : 8000,
   memory: 256 * 1024 * 1024,  // 256MB
