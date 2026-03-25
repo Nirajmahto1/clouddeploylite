@@ -208,6 +208,8 @@ export default function DeployPage({ onBack, onDeployed }) {
       const pollInterval = setInterval(async () => {
         try {
           const status = await api.get(`/api/apps/${res.data.app.id}`);
+          console.log(status)
+          console.log(status.data);
           if (status.data.status === "running") {
             setStep(4);
             clearInterval(pollInterval);
