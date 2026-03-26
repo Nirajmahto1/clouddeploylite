@@ -270,7 +270,7 @@ export default function DeployPage({ onBack, onDeployed }) {
                   <Icon d={I.activity} size={13}/>View Logs
                 </button>
                 <button className="btn btn-ghost"
-                  onClick={() => window.open(`https://${createdApp?.subdomain}.psnlprojects.fun`)}>
+                  onClick={() => window.open(`https://${createdApp?.app?.subdomain}.psnlprojects.fun`)}>
                   <Icon d={I.zap} size={13}/>Visit App
                 </button>
               </div>
