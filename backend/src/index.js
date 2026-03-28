@@ -41,7 +41,27 @@ app.get('/health',(req,res)=>{
         uptime:process.uptime()
     });
 });
-
+// backend/src/index.js
+app.get("/api/analytics", authenticateToken, async (req, res) => {
+  const { range = "Last 24 Hours" } = req.query;
+  // Query your DB / Docker stats here
+  // Return this shape:
+  res.json({
+    totalRequests: 1200000,
+    totalRequestsDelta: "+12.4%",
+    bandwidth: "4.5TB",
+    bandwidthDelta: "+5.2%",
+    avgLatency: 42,
+    avgLatencyDelta: "-3ms",
+    errorRate: 0.12,
+    errorRateDelta: "+0.02%",
+    chartData: [...],       // array of {label, success, failed}
+    latencyBuckets: [...],  // array of {label, pct, color}
+    p99Latency: 142,
+    regions: [...],         // array of {label, pct, color}
+    topRoutes: [...],       // array of {endpoint, traffic, errorRate, level}
+  });
+});
 // API routes
 app.get('/api',(req,res)=>{
     res.json({
