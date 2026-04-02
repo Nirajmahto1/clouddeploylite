@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+const { requireAuth } = require('../middleware/auth');
 
 const db = require('./db');
 
@@ -42,7 +43,7 @@ app.get('/health',(req,res)=>{
     });
 });
 // backend/src/index.js
-app.get("/api/analytics", authenticateToken, async (req, res) => {
+app.get("/api/analytics", requireAuth, async (req, res) => {
   const { range = "Last 24 Hours" } = req.query;
   // Query your DB / Docker stats here
   // Return this shape:
