@@ -55,11 +55,11 @@ app.get("/api/analytics", authenticateToken, async (req, res) => {
     avgLatencyDelta: "-3ms",
     errorRate: 0.12,
     errorRateDelta: "+0.02%",
-    chartData: [...],       // array of {label, success, failed}
-    latencyBuckets: [...],  // array of {label, pct, color}
+    chartData: [],       // array of {label, success, failed}
+    latencyBuckets: [],  // array of {label, pct, color}
     p99Latency: 142,
-    regions: [...],         // array of {label, pct, color}
-    topRoutes: [...],       // array of {endpoint, traffic, errorRate, level}
+    regions: [],         // array of {label, pct, color}
+    topRoutes: [],       // array of {endpoint, traffic, errorRate, level}
   });
 });
 // API routes
