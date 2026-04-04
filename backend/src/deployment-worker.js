@@ -53,14 +53,15 @@ async function processDeployment(deployId, appId, repoUrl, userId) {
     const containerName = `app-${appId}`;
     // Get app details for subdomain
 const app = await db.queryOne('SELECT subdomain,env FROM apps WHERE id = $1', [appId]);
-
+const rawEnv = app.env || {};
+const envArray = Array.isArray(rawEnv)?rawEnv:Object.entries(rawEnv).map(([k, v]) => `${k}=${v}`);
    const containerResult = await createAndStartContainer(imageName, containerName, {
   enableHttps:true,
     subdomain: app.subdomain,
   domain: process.env.APP_DOMAIN || 'localhost',  // localhost for dev
   containerPort: runtime.runtime === 'nodejs' ? 3000 : 8000,
   memory: 128 * 1024 * 1024, 
-  env:  app.env,// 256MB
+  env:  envArray,// 256MB
   labels: {
     'clouddeploylite.app-id': containerName,
     'clouddeploylite.deploy-id': deployId
