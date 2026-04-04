@@ -9,6 +9,9 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
+  transport:
+    respondingTimeouts:
+      idleTimeout: 600s
 
 # Providers
 providers:

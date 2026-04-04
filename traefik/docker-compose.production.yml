@@ -27,7 +27,9 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.email=itsnirajmahto@gmail.com"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
-      
+      - "--entrypoints.websecure.transport.respondingTimeouts.idleTimeout=600s"
+      - "--entrypoints.websecure.transport.respondingTimeouts.readTimeout=600s"
+  
       # Logging
       - "--log.level=INFO"
       - "--accesslog=true"
