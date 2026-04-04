@@ -60,7 +60,7 @@ const app = await db.queryOne('SELECT subdomain,env FROM apps WHERE id = $1', [a
   domain: process.env.APP_DOMAIN || 'localhost',  // localhost for dev
   containerPort: runtime.runtime === 'nodejs' ? 3000 : 8000,
   memory: 128 * 1024 * 1024, 
-  Env:  app.env,// 256MB
+  env:  app.env,// 256MB
   labels: {
     'clouddeploylite.app-id': containerName,
     'clouddeploylite.deploy-id': deployId
