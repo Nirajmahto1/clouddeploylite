@@ -115,9 +115,17 @@ async function detectRuntime(buildPath) {
 //Generate Dockerfile based on the runtime
 async function generateDockerfile(buildPath, runtime) {
     console.log(`📝 Generating Dockerfile for ${runtime.runtime}...`);
+    const dockerfilePath = path.join(buildPath, 'Dockerfile');
 
-    let dockerfileContent = '';
-    if (runtime.runtime === 'nodejs') {
+    try{
+        await fs.access(dockerfilePath);
+        const dockerfileContent = await fs.readFile(dockerfilePath, 'utf8');
+    }catch{
+
+    }
+    
+    if (runtime.runtime === 'nodejs' && !dockerfileContent) {
+        let dockerfileContent ='';
         dockerfileContent = `FROM node:${runtime.version}-alpine
 
 WORKDIR /app
@@ -136,7 +144,10 @@ EXPOSE 3000
 
 # Start command
 CMD ${runtime.startCommand}`;
+    await fs.writeFile(dockerfilePath, dockerfileContent);
+    console.log('✅ Dockerfile generated');
     } else if (runtime.runtime === 'python') {
+         let dockerfileContent ='';
         dockerfileContent = `FROM python:${runtime.version}-slim
 
 WORKDIR /app
@@ -156,10 +167,10 @@ EXPOSE 8000
 # Start command
 CMD ${runtime.startCommand}
 `;
-    }
-    const dockerfilePath = path.join(buildPath, 'Dockerfile');
     await fs.writeFile(dockerfilePath, dockerfileContent);
     console.log('✅ Dockerfile generated');
+    }
+   
     return dockerfilePath;
 }
 
