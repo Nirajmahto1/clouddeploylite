@@ -219,7 +219,7 @@ async function createAndStartContainer(imageName, containerName, options = {}) {
   try {
     const container = await docker.createContainer(containerConfig);
     console.log(`   Container created: ${container.id.substring(0, 12)}`);
-    
+    console.log(containerConfig);
     // Start container
     await container.start();
     console.log('   Container started');
