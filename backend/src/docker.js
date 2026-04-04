@@ -179,8 +179,9 @@ async function createAndStartContainer(imageName, containerName, options = {}) {
     
     // Service - Tell Traefik which internal port to use
     [`traefik.http.services.${containerName}.loadbalancer.server.port`]: String(containerPort),
+    [`traefik.http.middlewares.${containerName}-ws.headers.customrequestheaders.X-Forwarded-Proto`]: 'https',
+    [`traefik.http.routers.${containerName}.middlewares`]: `${containerName}-ws`,
     [`traefik.http.routers.${containerName}.middlewares`]: 'ws-headers@docker',
-
     
     // Custom labels
     'clouddeploylite.managed': 'true',
