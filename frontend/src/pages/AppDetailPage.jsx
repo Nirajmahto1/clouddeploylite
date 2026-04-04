@@ -249,8 +249,8 @@ export default function AppDetailPage({ app, onBack }) {
 
   const fetchEnvVars = async () => {
     try {
-      const res = await api.get(`/api/apps/${app.id}/env`);
-      setEnvVars(res.data); // [{key, value}]
+      const res = await api.get(`/api/apps/${app.id}`);
+      setEnvVars(res.data.app.env); // [{key, value}]
     } catch (_) {}
   };
 
