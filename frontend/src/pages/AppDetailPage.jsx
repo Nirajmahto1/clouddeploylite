@@ -223,7 +223,9 @@ export default function AppDetailPage({ app, onBack }) {
 
   // ── Fetch env vars ───────────────────────────────────────────
   useEffect(() => {
-    if (app?.id) fetchEnvVars();
+    if (app?.id){ fetchEnvVars();
+      fetchDeployments();
+    }
   }, [app?.id]);
 
   const fetchLogs = async () => {
