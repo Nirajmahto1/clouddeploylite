@@ -85,7 +85,7 @@ await cleanupBuilds(buildPath);
 })
 // Create new app and trigger deployment
 router.post('/', requireAuth, async (req, res) => {
-  const { name, repoUrl } = req.body;
+  const { name, repoUrl ,subdomain,env = {}} = req.body;
   
   // Validation
   if (!name || !repoUrl) {
@@ -103,7 +103,7 @@ router.post('/', requireAuth, async (req, res) => {
   
   try {
     // Generate subdomain from app name
-    const subdomain = name.toLowerCase()
+    const subdomain = subdomain.toLowerCase()
       .replace(/[^a-z0-9]/g, '-')
       .replace(/-+/g, '-')
       .replace(/^-|-$/g, '');
@@ -116,16 +116,16 @@ router.post('/', requireAuth, async (req, res) => {
     
     if (existing) {
       return res.status(400).json({ 
-        error: 'An app with this name already exists' 
+        error: 'An app with this subdomain already exists' 
       });
     }
     
     // Create app record
     const app = await db.queryOne(
-      `INSERT INTO apps (user_id, name, subdomain, repo_url, status)
-       VALUES ($1, $2, $3, $4, $5)
+      `INSERT INTO apps (user_id, name, subdomain, repo_url, env, status)
+       VALUES ($1, $2, $3, $4, $5,$6)
        RETURNING *`,
-      [req.user.id, name, subdomain, repoUrl, 'pending']
+      [req.user.id, name, subdomain, repoUrl, JSON.stringify(env),'pending']
     );
     
     // Create deployment record
