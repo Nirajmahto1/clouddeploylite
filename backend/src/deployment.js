@@ -135,8 +135,7 @@ COPY . .
 EXPOSE 3000
 
 # Start command
-CMD ${runtime.startCommand}
-`;
+CMD ${runtime.startCommand}`;
     } else if (runtime.runtime === 'python') {
         dockerfileContent = `FROM python:${runtime.version}-slim
 
